@@ -1,289 +1,142 @@
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>CHRONO-MERGE PRO</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
-    body {
-      background: #05070c; color: #f8fafc; font-family: system-ui, sans-serif;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      min-height: 100vh; overflow: hidden; touch-action: none; padding: 8px;
-    }
-    header, footer {
-      width: 100%; max-width: 400px; padding: 10px 14px; background: #0e1320;
-      display: flex; justify-content: space-between; align-items: center; border: 1px solid #232d4b;
-    }
-    header { border-bottom: none; border-radius: 14px 14px 0 0; }
-    footer { border-top: none; border-radius: 0 0 14px 14px; gap: 8px; flex-direction: column; }
-    .top-bar { display: flex; justify-content: space-between; width: 100%; align-items: center; }
-    .title { font-weight: 900; font-size: 1rem; color: #00f5d4; }
-    .sub { font-size: 0.68rem; color: #94a3b8; font-weight: 700; }
-    .combo { background: #fee440; color: #000; font-size: 0.7rem; font-weight: 900; padding: 2px 6px; border-radius: 6px; margin-left: 6px; }
-    .stats { display: flex; gap: 12px; font-size: 0.65rem; font-weight: 700; color: #94a3b8; }
-    .stat-box { display: flex; flex-direction: column; align-items: flex-end; }
-    .stat-box span { font-size: 1rem; color: #fff; font-weight: 900; }
-    #game-container {
-      position: relative; width: 100%; max-width: 400px; aspect-ratio: 1 / 1;
-      background: #090d16; border-left: 1px solid #232d4b; border-right: 1px solid #232d4b;
-    }
-    canvas { display: block; width: 100%; height: 100%; }
-    button { border: none; border-radius: 10px; font-weight: 800; cursor: pointer; }
-    button:active:not(:disabled) { transform: scale(0.94); }
-    .actions { display: flex; gap: 6px; width: 100%; }
-    #power-btn { flex: 1; padding: 11px; font-size: 0.8rem; background: #182036; color: #64748b; }
-    #power-btn.ready { background: #9b5de5; color: #fff; }
-    .icon-btn { padding: 11px 14px; font-size: 0.95rem; background: #182036; color: #fff; }
-    .dpad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; width: 100%; margin-top: 4px; }
-    .dir-btn { background: #141b2e; color: #00f5d4; padding: 10px 0; font-size: 1.1rem; border: 1px solid #232d4b; }
-    #overlay {
-      position: absolute; inset: 0; background: rgba(5, 7, 12, 0.96);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-align: center; padding: 16px; z-index: 30;
-    }
-    #overlay h2 { font-size: 1.65rem; font-weight: 900; margin-bottom: 6px; color: #00f5d4; }
-    #overlay p { margin-bottom: 12px; line-height: 1.4; color: #cbd5e1; font-size: 0.82rem; }
-    .modes { display: flex; gap: 6px; width: 100%; margin-bottom: 12px; }
-    .mode-btn { flex: 1; padding: 9px 4px; font-size: 0.74rem; background: #141b2e; color: #94a3b8; border: 1px solid #232d4b; }
-    .mode-btn.active { background: #00bbf9; color: #040810; border-color: #00f5d4; }
-    #start-btn { width: 100%; background: #00f5d4; color: #040810; padding: 14px; font-size: 1rem; }
-    .trophies { margin-top: 8px; font-size: 0.72rem; color: #fee440; }
-    #toast {
-      position: fixed; top: 12px; left: 50%; transform: translateX(-50%) translateY(-100px);
-      background: #fee440; color: #000; padding: 8px 16px; border-radius: 20px;
-      font-size: 0.78rem; font-weight: 900; transition: transform 0.3s; z-index: 50;
-    }
-    #toast.show { transform: translateX(-50%) translateY(0); }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>CHRONO-MERGE PRO</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+  body { background: #05070c; color: #f8fafc; font-family: system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 8px; }
+  header, footer { width: 100%; max-width: 400px; padding: 10px 14px; background: #0e1320; display: flex; justify-content: space-between; align-items: center; border: 1px solid #232d4b; }
+  header { border-bottom: none; border-radius: 14px 14px 0 0; }
+  footer { border-top: none; border-radius: 0 0 14px 14px; gap: 8px; flex-direction: column; }
+  .title { font-weight: 900; font-size: 1rem; color: #00f5d4; }
+  .sub { font-size: 0.68rem; color: #94a3b8; font-weight: 700; }
+  .combo { background: #fee440; color: #000; font-size: 0.7rem; font-weight: 900; padding: 2px 6px; border-radius: 6px; margin-left: 6px; }
+  .stats { display: flex; gap: 12px; font-size: 0.65rem; font-weight: 700; color: #94a3b8; }
+  .stat-box { display: flex; flex-direction: column; align-items: flex-end; }
+  .stat-box span { font-size: 1rem; color: #fff; font-weight: 900; }
+  #game-container { position: relative; width: 100%; max-width: 400px; aspect-ratio: 1 / 1; background: #090d16; border-left: 1px solid #232d4b; border-right: 1px solid #232d4b; }
+  canvas { display: block; width: 100%; height: 100%; }
+  button { border: none; border-radius: 10px; font-weight: 800; cursor: pointer; }
+  .actions { display: flex; gap: 6px; width: 100%; }
+  #power-btn { flex: 1; padding: 11px; font-size: 0.8rem; background: #182036; color: #64748b; }
+  #power-btn.ready { background: #9b5de5; color: #fff; }
+  .icon-btn { padding: 11px 14px; font-size: 0.95rem; background: #182036; color: #fff; }
+  .dpad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; width: 100%; margin-top: 4px; }
+  .dir-btn { background: #141b2e; color: #00f5d4; padding: 11px 0; font-size: 1.1rem; border: 1px solid #232d4b; }
+  #overlay { position: absolute; inset: 0; background: rgba(5, 7, 12, 0.96); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 16px; z-index: 30; }
+  #overlay h2 { font-size: 1.65rem; font-weight: 900; margin-bottom: 6px; color: #00f5d4; }
+  #overlay p { margin-bottom: 12px; line-height: 1.4; color: #cbd5e1; font-size: 0.82rem; }
+  .modes { display: flex; gap: 6px; width: 100%; margin-bottom: 12px; }
+  .mode-btn { flex: 1; padding: 9px 4px; font-size: 0.74rem; background: #141b2e; color: #94a3b8; border: 1px solid #232d4b; }
+  .mode-btn.active { background: #00bbf9; color: #040810; border-color: #00f5d4; }
+  #start-btn { width: 100%; background: #00f5d4; color: #040810; padding: 14px; font-size: 1rem; }
+  .trophies { margin-top: 8px; font-size: 0.72rem; color: #fee440; }
+  #toast { position: fixed; top: 12px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #fee440; color: #000; padding: 8px 16px; border-radius: 20px; font-size: 0.78rem; font-weight: 900; transition: transform 0.3s; z-index: 50; }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+</style>
 </head>
 <body>
-  <div id="toast">🏆 CONQUISTA!</div>
-  <header>
-    <div>
-      <div><span class="title">CHRONO-MERGE</span><span id="combo-badge" class="combo" style="display:none">x2</span></div>
-      <div id="mode-label" class="sub">MODO: CLÁSSICO</div>
-    </div>
-    <div class="stats">
-      <div id="timer-box" class="stat-box" style="display:none">TEMPO <span id="timer">60</span></div>
-      <div class="stat-box">PONTOS <span id="score">0</span></div>
-      <div class="stat-box">RECORDE <span id="best">0</span></div>
-    </div>
-  </header>
-  <div id="game-container">
-    <canvas id="canvas"></canvas>
-    <div id="overlay">
-      <h2 id="overlay-title">CHRONO-MERGE</h2>
-      <p id="overlay-desc">
-        <strong>O tempo só avança quando te moves.</strong><br>
-        🔹 Junta iguais (2+2=4) • 🔴 Caça iguais ou menores.
-      </p>
-      <div class="modes">
-        <button type="button" class="mode-btn active" data-mode="classic">⚔️ Clássico</button>
-        <button type="button" class="mode-btn" data-mode="blitz">⏱️ 60 Seg</button>
-        <button type="button" class="mode-btn" data-mode="survival">💀 Extremo</button>
-      </div>
-      <button type="button" id="start-btn">INICIAR PARTIDA</button>
-      <div id="trophy-count" class="trophies">🏆 Conquistas: 0 / 4</div>
-    </div>
+<div id="toast">🏆 CONQUISTA!</div>
+<header>
+  <div>
+    <div><span class="title">CHRONO-MERGE</span><span id="combo-badge" class="combo" style="display:none">x2</span></div>
+    <div id="mode-label" class="sub">MODO: CLÁSSICO</div>
   </div>
-  <footer>
-    <div class="actions">
-      <button type="button" id="power-btn" disabled>❄️ ENERGIA (0%)</button>
-      <button type="button" id="sound-btn" class="icon-btn">🔊</button>
-      <button type="button" id="restart-btn" class="icon-btn">↻</button>
+  <div class="stats">
+    <div id="timer-box" class="stat-box" style="display:none">TEMPO <span id="timer">60</span></div>
+    <div class="stat-box">PONTOS <span id="score">0</span></div>
+    <div class="stat-box">RECORDE <span id="best">0</span></div>
+  </div>
+</header>
+<div id="game-container">
+  <canvas id="canvas"></canvas>
+  <div id="overlay">
+    <h2 id="overlay-title">CHRONO-MERGE</h2>
+    <p id="overlay-desc"><strong>O tempo só avança quando te moves.</strong><br>🔹 Junta iguais (2+2=4) • 🔴 Caça iguais ou menores.</p>
+    <div class="modes">
+      <button type="button" class="mode-btn active" onclick="setMode('classic', this)">⚔️ Clássico</button>
+      <button type="button" class="mode-btn" onclick="setMode('blitz', this)">⏱️ 60 Seg</button>
+      <button type="button" class="mode-btn" onclick="setMode('survival', this)">💀 Extremo</button>
     </div>
-    <div class="dpad">
-      <button type="button" class="dir-btn" id="btn-left">◀</button>
-      <button type="button" class="dir-btn" id="btn-up">▲</button>
-      <button type="button" class="dir-btn" id="btn-down">▼</button>
-      <button type="button" class="dir-btn" id="btn-right">▶</button>
-    </div>
-  </footer>
-  <script>
-    const canvas = document.getElementById('canvas'), ctx = canvas.getContext('2d');
-    const scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
-    const timerBox = document.getElementById('timer-box'), timerEl = document.getElementById('timer');
-    const modeLabel = document.getElementById('mode-label'), comboBadge = document.getElementById('combo-badge');
-    const powerBtn = document.getElementById('power-btn'), soundBtn = document.getElementById('sound-btn');
-    const overlay = document.getElementById('overlay'), overlayTitle = document.getElementById('overlay-title');
-    const overlayDesc = document.getElementById('overlay-desc'), startBtn = document.getElementById('start-btn');
-    const restartBtn = document.getElementById('restart-btn'), trophyCount = document.getElementById('trophy-count');
-    const toast = document.getElementById('toast'), modeBtns = document.querySelectorAll('.mode-btn');
+    <button type="button" id="start-btn" onclick="startGame()">INICIAR PARTIDA</button>
+    <div id="trophy-count" class="trophies">🏆 Conquistas: 0 / 4</div>
+  </div>
+</div>
+<footer>
+  <div class="actions">
+    <button type="button" id="power-btn" disabled onclick="usePower()">❄️ ENERGIA (0%)</button>
+    <button type="button" id="sound-btn" class="icon-btn" onclick="toggleSound()">🔊</button>
+    <button type="button" class="icon-btn" onclick="startGame()">↻</button>
+  </div>
+  <div class="dpad">
+    <button type="button" class="dir-btn" onclick="move(0,-1)">◀</button>
+    <button type="button" class="dir-btn" onclick="move(-1,0)">▲</button>
+    <button type="button" class="dir-btn" onclick="move(1,0)">▼</button>
+    <button type="button" class="dir-btn" onclick="move(0,1)">▶</button>
+  </div>
+</footer>
+<script>
+const canvas = document.getElementById('canvas'), ctx = canvas.getContext('2d');
+const N = 6, DIRS = [{r:-1,c:0},{r:1,c:0},{r:0,c:-1},{r:0,c:1}];
+const COLORS = {2:['#00bbf9','#040810'],4:['#00f5d4','#040810'],8:['#38b000','#fff'],16:['#9b5de5','#fff'],32:['#f15bb5','#fff'],64:['#ff9e00','#040810'],128:['#fee440','#040810'],256:['#fff','#040810']};
+let mode='classic', cell=0, grid=[], parts=[], texts=[], score=0, combo=1, energy=0, freeze=0, shake=0, turns=0, timeLeft=60, timerId=null, over=false, muted=false, actx=null;
+let bests = JSON.parse(localStorage.getItem('cm_bests')||'{"classic":0,"blitz":0,"survival":0}');
+let ach = JSON.parse(localStorage.getItem('cm_ach')||'{}');
 
-    const N = 6, DIRS = [{ r: -1, c: 0 }, { r: 1, c: 0 }, { r: 0, c: -1 }, { r: 0, c: 1 }];
-    const COLORS = {
-      2: ['#00bbf9', '#040810'], 4: ['#00f5d4', '#040810'], 8: ['#38b000', '#fff'],
-      16: ['#9b5de5', '#fff'], 32: ['#f15bb5', '#fff'], 64: ['#ff9e00', '#040810'],
-      128: ['#fee440', '#040810'], 256: ['#ffffff', '#040810']
-    };
+function updateTrophies(){ document.getElementById('trophy-count').textContent = '🏆 Conquistas: ' + Object.keys(ach).length + ' / 4'; }
+updateTrophies(); document.getElementById('best').textContent = bests[mode]||0;
 
-    let mode = 'classic', cell = 0, grid = [], parts = [], texts = [];
-    let score = 0, combo = 1, energy = 0, freeze = 0, shake = 0, turns = 0;
-    let timeLeft = 60, timerId = null, over = false, muted = false, actx = null;
-    let bests = JSON.parse(localStorage.getItem('cm_bests') || '{"classic":0,"blitz":0,"survival":0}');
-    let ach = JSON.parse(localStorage.getItem('cm_ach') || '{}');
+function unlock(id, label){
+  if(ach[id]) return; ach[id]=true; localStorage.setItem('cm_ach', JSON.stringify(ach)); updateTrophies();
+  const t = document.getElementById('toast'); t.textContent = '🏆 ' + label; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+function tone(f,t,d){
+  if(muted||!actx) return;
+  try{ const o=actx.createOscillator(), g=actx.createGain(); o.type=t; o.frequency.value=f; g.gain.setValueAtTime(0.07,actx.currentTime); g.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+d); o.connect(g); g.connect(actx.destination); o.start(); o.stop(actx.currentTime+d); }catch(e){}
+}
+function toggleSound(){ muted=!muted; document.getElementById('sound-btn').textContent = muted?'🔇':'🔊'; }
+function setMode(m, el){
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active');
+  mode=m; document.getElementById('best').textContent = bests[mode]||0;
+  document.getElementById('mode-label').textContent = 'MODO: ' + (m==='classic'?'CLÁSSICO':m==='blitz'?'60 SEG':'EXTREMO');
+}
+function resize(){
+  const w = canvas.parentElement.getBoundingClientRect().width || 320, dpr = window.devicePixelRatio||1;
+  canvas.width=w*dpr; canvas.height=w*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); cell=w/N;
+}
+window.addEventListener('resize', resize); resize();
 
-    function updateTrophies() { trophyCount.textContent = `🏆 Conquistas: ${Object.keys(ach).length} / 4`; }
-    updateTrophies(); bestEl.textContent = bests[mode] || 0;
+function fx(c,r,col,txt){
+  for(let i=0;i<10;i++){ const a=Math.random()*6.28, s=1.5+Math.random()*3.5; parts.push({x:(c+0.5)*cell,y:(r+0.5)*cell,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:1,col}); }
+  if(txt) texts.push({x:(c+0.5)*cell,y:(r+0.4)*cell,txt,col,l:1});
+}
+function ui(){
+  document.getElementById('score').textContent = score;
+  if(score>(bests[mode]||0)){ bests[mode]=score; document.getElementById('best').textContent=score; localStorage.setItem('cm_bests',JSON.stringify(bests)); }
+  if(score>=1000) unlock('pts1000','1.000 Pontos!'); if(combo>=5) unlock('combo5','Combo x5!');
+  const cb = document.getElementById('combo-badge'); cb.textContent='x'+combo; cb.style.display=combo>1?'inline-block':'none';
+  const pb = document.getElementById('power-btn');
+  if(freeze>0){ pb.textContent='❄️ CONGELADO ('+freeze+')'; pb.className=''; pb.disabled=true; }
+  else if(energy>=100){ pb.textContent='❄️ CONGELAR INIMIGOS!'; pb.className='ready'; pb.disabled=false; }
+  else{ pb.textContent='❄️ ENERGIA ('+energy+'%)'; pb.className=''; pb.disabled=true; }
+}
+function emptyCells(){ const r=[]; for(let i=0;i<N;i++) for(let j=0;j<N;j++) if(!grid[i][j]) r.push({r:i,c:j}); return r; }
+function spawn(team,val){ const e=emptyCells(); if(!e.length) return; const s=e[Math.floor(Math.random()*e.length)]; grid[s.r][s.c]={team,val,sc:0.1}; }
 
-    function unlock(id, label) {
-      if (ach[id]) return;
-      ach[id] = true; localStorage.setItem('cm_ach', JSON.stringify(ach)); updateTrophies();
-      toast.textContent = `🏆 ${label}`; toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2500);
-    }
-
-    function tone(f, t, d) {
-      if (muted || !actx) return;
-      try {
-        const o = actx.createOscillator(), g = actx.createGain();
-        o.type = t; o.frequency.value = f; g.gain.setValueAtTime(0.07, actx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + d);
-        o.connect(g); g.connect(actx.destination); o.start(); o.stop(actx.currentTime + d);
-      } catch (e) {}
-    }
-
-    soundBtn.onclick = () => { muted = !muted; soundBtn.textContent = muted ? '🔇' : '🔊'; };
-    modeBtns.forEach(btn => {
-      btn.onclick = () => {
-        modeBtns.forEach(b => b.classList.remove('active')); btn.classList.add('active');
-        mode = btn.dataset.mode; bestEl.textContent = bests[mode] || 0;
-        modeLabel.textContent = `MODO: ${mode === 'classic' ? 'CLÁSSICO' : mode === 'blitz' ? '60 SEG' : 'EXTREMO'}`;
-      };
-    });
-
-    function resize() {
-      const w = canvas.parentElement.getBoundingClientRect().width || 320;
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = w * dpr; canvas.height = w * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); cell = w / N;
-    }
-    window.addEventListener('resize', resize); resize();
-
-    function fx(c, r, col, txt) {
-      for (let i = 0; i < 12; i++) {
-        const a = Math.random() * Math.PI * 2, s = 1.5 + Math.random() * 3.5;
-        parts.push({ x: (c + 0.5) * cell, y: (r + 0.5) * cell, vx: Math.cos(a) * s, vy: Math.sin(a) * s, l: 1, col });
-      }
-      if (txt) texts.push({ x: (c + 0.5) * cell, y: (r + 0.4) * cell, txt, col, l: 1 });
-    }
-
-    function ui() {
-      scoreEl.textContent = score;
-      if (score > (bests[mode] || 0)) { bests[mode] = score; bestEl.textContent = score; localStorage.setItem('cm_bests', JSON.stringify(bests)); }
-      if (score >= 1000) unlock('pts1000', '1.000 Pontos!');
-      if (combo >= 5) unlock('combo5', 'Combo x5!');
-      comboBadge.textContent = `x${combo}`; comboBadge.style.display = combo > 1 ? 'inline-block' : 'none';
-      if (freeze > 0) { powerBtn.textContent = `❄️ CONGELADO (${freeze})`; powerBtn.className = ''; powerBtn.disabled = true; }
-      else if (energy >= 100) { powerBtn.textContent = '❄️ CONGELAR INIMIGOS!'; powerBtn.className = 'ready'; powerBtn.disabled = false; }
-      else { powerBtn.textContent = `❄️ ENERGIA (${energy}%)`; powerBtn.className = ''; powerBtn.disabled = true; }
-    }
-
-    function emptyCells() {
-      const res = [];
-      for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) if (!grid[r][c]) res.push({ r, c });
-      return res;
-    }
-
-    function spawn(team, val) {
-      const e = emptyCells(); if (!e.length) return;
-      const s = e[Math.floor(Math.random() * e.length)];
-      grid[s.r][s.c] = { team, val, sc: 0.1 };
-    }
-
-    function start() {
-      try { if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === 'suspended') actx.resume(); } catch (e) {}
-      if (timerId) clearInterval(timerId);
-      timerBox.style.display = mode === 'blitz' ? 'flex' : 'none';
-      timeLeft = 60; timerEl.textContent = timeLeft;
-      if (mode === 'blitz') {
-        timerId = setInterval(() => {
-          if (over) return; timeLeft--; timerEl.textContent = timeLeft;
-          if (timeLeft <= 0) { clearInterval(timerId); end('TEMPO ESGOTADO!', 'Fim dos 60 segundos.'); }
-        }, 1000);
-      }
-      grid = Array.from({ length: N }, () => Array(N).fill(null));
-      parts = []; texts = []; score = 0; combo = 1; energy = 0; freeze = 0; turns = 0; over = false;
-      overlay.style.display = 'none';
-      resize();
-      spawn('player', 2); spawn('player', 2); spawn('enemy', 2);
-      if (mode === 'survival') spawn('enemy', 4);
-      ui(); tone(520, 'triangle', 0.15);
-    }
-
-    powerBtn.onclick = () => {
-      if (energy >= 100 && !freeze && !over) {
-        energy = 0; freeze = 2; shake = 8; unlock('freeze1', 'Senhor do Tempo!');
-        tone(720, 'sine', 0.3); fx(2.5, 2.5, '#4cc9f0', 'CONGELADO!'); ui();
-      }
-    };
-
-    function move(dr, dc) {
-      if (over || overlay.style.display !== 'none') return;
-      let moved = false, gain = 0;
-      const merged = Array.from({ length: N }, () => Array(N).fill(false));
-      const rows = [...Array(N).keys()], cols = [...Array(N).keys()];
-      if (dr === 1) rows.reverse(); if (dc === 1) cols.reverse();
-
-      for (const r of rows) for (const c of cols) {
-        const u = grid[r][c]; if (!u || u.team !== 'player') continue;
-        let nr = r, nc = c;
-        while (true) {
-          const tr = nr + dr, tc = nc + dc;
-          if (tr < 0 || tr >= N || tc < 0 || tc >= N) break;
-          const t = grid[tr][tc];
-          if (!t) { nr = tr; nc = tc; }
-          else if (t.team === 'player' && t.val === u.val && !merged[tr][tc]) { nr = tr; nc = tc; break; }
-          else if (t.team === 'enemy' && t.val <= u.val) { nr = tr; nc = tc; break; }
-          else break;
-        }
-        if (nr !== r || nc !== c) {
-          moved = true; const d = grid[nr][nc];
-          if (!d) grid[nr][nc] = u;
-          else if (d.team === 'player') {
-            const nv = u.val * 2, pts = nv * combo;
-            grid[nr][nc] = { team: 'player', val: nv, sc: 1.35 }; merged[nr][nc] = true; gain += pts; energy = Math.min(100, energy + 15);
-            if (nv >= 32) unlock('merge32', 'Alquimista 32!');
-            fx(nc, nr, (COLORS[nv] || ['#fee440']), `+${pts}`); tone(320 + Math.log2(nv) * 60, 'triangle', 0.12);
-          } else {
-            const nv = u.val + (d.val === u.val ? u.val : 0), pts = d.val * 3 * combo;
-            grid[nr][nc] = { team: 'player', val: nv, sc: 1.4 }; merged[nr][nc] = true; gain += pts; energy = Math.min(100, energy + 25); shake = 6;
-            if (mode === 'blitz') { timeLeft = Math.min(60, timeLeft + 2); timerEl.textContent = timeLeft; }
-            fx(nc, nr, '#ff1e56', mode === 'blitz' ? `+${pts} (+2s)` : `+${pts}!`); tone(580, 'sawtooth', 0.16);
-          }
-          grid[r][c] = null;
-        }
-      }
-      if (!moved) return;
-      if (gain > 0) { score += gain; combo = Math.min(8, combo + 1); } else combo = 1;
-      turns++;
-
-      if (freeze > 0) freeze--;
-      else {
-        const enemies = [];
-        for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) if (grid[r][c] && grid[r][c].team === 'enemy') enemies.push({ r, c, u: grid[r][c] });
-        for (const e of enemies) {
-          if (grid[e.r][e.c] !== e.u) continue;
-          let bestM = null, bestP = -99;
-          for (const d of DIRS) {
-            const tr = e.r + d.r, tc = e.c + d.c;
-            if (tr < 0 || tr >= N || tc < 0 || tc >= N) continue;
-            const t = grid[tr][tc];
-            if (!t && Math.random() > bestP) { bestP = Math.random(); bestM = { tr, tc, a: 'm' }; }
-            else if (t && t.team === 'enemy' && t.val === e.u.val && 5 > bestP) { bestP = 5; bestM = { tr, tc, a: 'f' }; }
-            else if (t && t.team === 'player' && t.val < e.u.val && 10 > bestP) { bestP = 10; bestM = { tr, tc, a: 'e' }; }
-          }
-          if (bestM) {
-            grid[e.r][e.c] = null;
-            if (bestM.a === 'm') grid[bestM.tr][bestM.tc] = e.u;
-            else if (bestM.a === 'f') { grid[bestM.tr][bestM.tc] = { team: 'enemy', val: e.u.val * 2, sc: 1.25 }; fx(bestM.tc, bestM.tr, '#ff1e56'); }
-            else { grid[bestM.tr][bestM.tc] = e.u; shake = 10; fx(bestM.tc, bestM.tr, '#fee440', 'ABSORVIDO!'); tone(130, 'sawtooth', 0.25); }
-          }
-        }
-      }
-      spawn('player', Math.random() < 0.85 ? 2 : 4);
-      if (turns % (mode === 'survival' ? 1 : 2) === 0 && !freeze) {
-        const maxP = Math.max(2, ...grid.flat().filter(u => u && u.team === 'player').map(u => u.val));
-        spawn('enemy', maxP >= 16 && Math.random() < (mode === 'survival' ? 0.55 : 0.35) ? 4 : 2);
-      }
-      ui();
+function startGame(){
+  try{ if(!actx) actx=new(window.AudioContext||window.webkitAudioContext)(); if(actx.state==='suspended') actx.resume(); }catch(e){}
+  if(timerId) clearInterval(timerId);
+  document.getElementById('timer-box').style.display = mode==='blitz'?'flex':'none';
+  timeLeft=60; document.getElementById('timer').textContent=timeLeft;
+  if(mode==='blitz'){ timerId=setInterval(()=>{ if(over)return; timeLeft--; document.getElementById('timer').textContent=timeLeft; if(timeLeft<=0){clearInterval(timerId);endGame('TEMPO ESGOTADO!','Fim dos 60s.');} },1000); }
+  grid = Array.from({length:N},()=>Array(N).fill(null));
+  parts=[]; texts=[]; score=0; combo=1; energy=0; freeze=0; turns=0; over=false;
+  document.getElementById('overlay').style.display='none';
+  resize(); spawn('player',2); spawn('player',2); spawn('enemy',2);
+  if(mode==='survival') spawn('enemy',4);
+  ui(); tone(520,'triangle',0.15);
+}
+function usePower(){
