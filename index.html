@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>CHRONO-MERGE PRO</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
@@ -11,8 +11,8 @@
   header { border-bottom: none; border-radius: 14px 14px 0 0; }
   footer { border-top: none; border-radius: 0 0 14px 14px; gap: 8px; flex-direction: column; }
   .title { font-weight: 900; font-size: 1rem; color: #00f5d4; }
-  .sub { font-size: 0.68rem; color: #94a3b8; font-weight: 700; }
-  .combo { background: #fee440; color: #000; font-size: 0.7rem; font-weight: 900; padding: 2px 6px; border-radius: 6px; margin-left: 6px; }
+  .sub { font-size: 0.7rem; color: #94a3b8; font-weight: 700; }
+  .combo { background: #fee440; color: #000; font-size: 0.7rem; font-weight: 900; padding: 2px 6px; border-radius: 6px; margin-left: 6px; display: none; }
   .stats { display: flex; gap: 12px; font-size: 0.65rem; font-weight: 700; color: #94a3b8; }
   .stat-box { display: flex; flex-direction: column; align-items: flex-end; }
   .stat-box span { font-size: 1rem; color: #fff; font-weight: 900; }
@@ -24,12 +24,12 @@
   #power-btn.ready { background: #9b5de5; color: #fff; }
   .icon-btn { padding: 11px 14px; font-size: 0.95rem; background: #182036; color: #fff; }
   .dpad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; width: 100%; margin-top: 4px; }
-  .dir-btn { background: #141b2e; color: #00f5d4; padding: 11px 0; font-size: 1.1rem; border: 1px solid #232d4b; }
+  .dir-btn { background: #141b2e; color: #00f5d4; padding: 12px 0; font-size: 1.1rem; border: 1px solid #232d4b; }
   #overlay { position: absolute; inset: 0; background: rgba(5, 7, 12, 0.96); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 16px; z-index: 30; }
   #overlay h2 { font-size: 1.65rem; font-weight: 900; margin-bottom: 6px; color: #00f5d4; }
   #overlay p { margin-bottom: 12px; line-height: 1.4; color: #cbd5e1; font-size: 0.82rem; }
   .modes { display: flex; gap: 6px; width: 100%; margin-bottom: 12px; }
-  .mode-btn { flex: 1; padding: 9px 4px; font-size: 0.74rem; background: #141b2e; color: #94a3b8; border: 1px solid #232d4b; }
+  .mode-btn { flex: 1; padding: 10px 4px; font-size: 0.75rem; background: #141b2e; color: #94a3b8; border: 1px solid #232d4b; }
   .mode-btn.active { background: #00bbf9; color: #040810; border-color: #00f5d4; }
   #start-btn { width: 100%; background: #00f5d4; color: #040810; padding: 14px; font-size: 1rem; }
   .trophies { margin-top: 8px; font-size: 0.72rem; color: #fee440; }
@@ -41,7 +41,7 @@
 <div id="toast">🏆 CONQUISTA!</div>
 <header>
   <div>
-    <div><span class="title">CHRONO-MERGE</span><span id="combo-badge" class="combo" style="display:none">x2</span></div>
+    <div><span class="title">CHRONO-MERGE</span><span id="combo-badge" class="combo">x2</span></div>
     <div id="mode-label" class="sub">MODO: CLÁSSICO</div>
   </div>
   <div class="stats">
@@ -56,87 +56,146 @@
     <h2 id="overlay-title">CHRONO-MERGE</h2>
     <p id="overlay-desc"><strong>O tempo só avança quando te moves.</strong><br>🔹 Junta iguais (2+2=4) • 🔴 Caça iguais ou menores.</p>
     <div class="modes">
-      <button type="button" class="mode-btn active" onclick="setMode('classic', this)">⚔️ Clássico</button>
-      <button type="button" class="mode-btn" onclick="setMode('blitz', this)">⏱️ 60 Seg</button>
-      <button type="button" class="mode-btn" onclick="setMode('survival', this)">💀 Extremo</button>
+      <button type="button" class="mode-btn active" id="m-classic">⚔️ Clássico</button>
+      <button type="button" class="mode-btn" id="m-blitz">⏱️ 60 Seg</button>
+      <button type="button" class="mode-btn" id="m-survival">💀 Extremo</button>
     </div>
-    <button type="button" id="start-btn" onclick="startGame()">INICIAR PARTIDA</button>
+    <button type="button" id="start-btn">INICIAR PARTIDA</button>
     <div id="trophy-count" class="trophies">🏆 Conquistas: 0 / 4</div>
   </div>
 </div>
 <footer>
   <div class="actions">
-    <button type="button" id="power-btn" disabled onclick="usePower()">❄️ ENERGIA (0%)</button>
-    <button type="button" id="sound-btn" class="icon-btn" onclick="toggleSound()">🔊</button>
-    <button type="button" class="icon-btn" onclick="startGame()">↻</button>
+    <button type="button" id="power-btn" disabled>❄️ ENERGIA (0%)</button>
+    <button type="button" id="sound-btn" class="icon-btn">🔊</button>
+    <button type="button" id="restart-btn" class="icon-btn">↻</button>
   </div>
   <div class="dpad">
-    <button type="button" class="dir-btn" onclick="move(0,-1)">◀</button>
-    <button type="button" class="dir-btn" onclick="move(-1,0)">▲</button>
-    <button type="button" class="dir-btn" onclick="move(1,0)">▼</button>
-    <button type="button" class="dir-btn" onclick="move(0,1)">▶</button>
+    <button type="button" class="dir-btn" id="d-left">◀</button>
+    <button type="button" class="dir-btn" id="d-up">▲</button>
+    <button type="button" class="dir-btn" id="d-down">▼</button>
+    <button type="button" class="dir-btn" id="d-right">▶</button>
   </div>
 </footer>
 <script>
-const canvas = document.getElementById('canvas'), ctx = canvas.getContext('2d');
-const N = 6, DIRS = [{r:-1,c:0},{r:1,c:0},{r:0,c:-1},{r:0,c:1}];
-const COLORS = {2:['#00bbf9','#040810'],4:['#00f5d4','#040810'],8:['#38b000','#fff'],16:['#9b5de5','#fff'],32:['#f15bb5','#fff'],64:['#ff9e00','#040810'],128:['#fee440','#040810'],256:['#fff','#040810']};
-let mode='classic', cell=0, grid=[], parts=[], texts=[], score=0, combo=1, energy=0, freeze=0, shake=0, turns=0, timeLeft=60, timerId=null, over=false, muted=false, actx=null;
-let bests = JSON.parse(localStorage.getItem('cm_bests')||'{"classic":0,"blitz":0,"survival":0}');
-let ach = JSON.parse(localStorage.getItem('cm_ach')||'{}');
+(function() {
+  var canvas = document.getElementById('canvas');
+  var ctx = canvas.getContext('2d');
+  var N = 6;
+  var DIRS = [{r:-1,c:0},{r:1,c:0},{r:0,c:-1},{r:0,c:1}];
+  var PALETTE = {
+    2: {bg:'#00bbf9', fg:'#040810'},
+    4: {bg:'#00f5d4', fg:'#040810'},
+    8: {bg:'#38b000', fg:'#ffffff'},
+    16: {bg:'#9b5de5', fg:'#ffffff'},
+    32: {bg:'#f15bb5', fg:'#ffffff'},
+    64: {bg:'#ff9e00', fg:'#040810'},
+    128: {bg:'#fee440', fg:'#040810'},
+    256: {bg:'#ffffff', fg:'#040810'}
+  };
+  var mode = 'classic', cell = 50, grid = [], parts = [], texts = [];
+  var score = 0, combo = 1, energy = 0, freeze = 0, shake = 0, turns = 0;
+  var timeLeft = 60, timerId = null, over = false, muted = false, actx = null;
+  var bests = {classic:0, blitz:0, survival:0};
+  var ach = {};
+  try {
+    var sb = localStorage.getItem('cm_bests'); if (sb) bests = JSON.parse(sb);
+    var sa = localStorage.getItem('cm_ach'); if (sa) ach = JSON.parse(sa);
+  } catch (e) {}
 
-function updateTrophies(){ document.getElementById('trophy-count').textContent = '🏆 Conquistas: ' + Object.keys(ach).length + ' / 4'; }
-updateTrophies(); document.getElementById('best').textContent = bests[mode]||0;
+  function updateTrophies() {
+    document.getElementById('trophy-count').textContent = '🏆 Conquistas: ' + Object.keys(ach).length + ' / 4';
+  }
+  updateTrophies();
+  document.getElementById('best').textContent = bests[mode] || 0;
 
-function unlock(id, label){
-  if(ach[id]) return; ach[id]=true; localStorage.setItem('cm_ach', JSON.stringify(ach)); updateTrophies();
-  const t = document.getElementById('toast'); t.textContent = '🏆 ' + label; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2500);
-}
-function tone(f,t,d){
-  if(muted||!actx) return;
-  try{ const o=actx.createOscillator(), g=actx.createGain(); o.type=t; o.frequency.value=f; g.gain.setValueAtTime(0.07,actx.currentTime); g.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+d); o.connect(g); g.connect(actx.destination); o.start(); o.stop(actx.currentTime+d); }catch(e){}
-}
-function toggleSound(){ muted=!muted; document.getElementById('sound-btn').textContent = muted?'🔇':'🔊'; }
-function setMode(m, el){
-  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active');
-  mode=m; document.getElementById('best').textContent = bests[mode]||0;
-  document.getElementById('mode-label').textContent = 'MODO: ' + (m==='classic'?'CLÁSSICO':m==='blitz'?'60 SEG':'EXTREMO');
-}
-function resize(){
-  const w = canvas.parentElement.getBoundingClientRect().width || 320, dpr = window.devicePixelRatio||1;
-  canvas.width=w*dpr; canvas.height=w*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); cell=w/N;
-}
-window.addEventListener('resize', resize); resize();
+  function unlock(id, label) {
+    if (ach[id]) return;
+    ach[id] = true;
+    try { localStorage.setItem('cm_ach', JSON.stringify(ach)); } catch (e) {}
+    updateTrophies();
+    var t = document.getElementById('toast');
+    t.textContent = '🏆 ' + label;
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2500);
+  }
 
-function fx(c,r,col,txt){
-  for(let i=0;i<10;i++){ const a=Math.random()*6.28, s=1.5+Math.random()*3.5; parts.push({x:(c+0.5)*cell,y:(r+0.5)*cell,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:1,col}); }
-  if(txt) texts.push({x:(c+0.5)*cell,y:(r+0.4)*cell,txt,col,l:1});
-}
-function ui(){
-  document.getElementById('score').textContent = score;
-  if(score>(bests[mode]||0)){ bests[mode]=score; document.getElementById('best').textContent=score; localStorage.setItem('cm_bests',JSON.stringify(bests)); }
-  if(score>=1000) unlock('pts1000','1.000 Pontos!'); if(combo>=5) unlock('combo5','Combo x5!');
-  const cb = document.getElementById('combo-badge'); cb.textContent='x'+combo; cb.style.display=combo>1?'inline-block':'none';
-  const pb = document.getElementById('power-btn');
-  if(freeze>0){ pb.textContent='❄️ CONGELADO ('+freeze+')'; pb.className=''; pb.disabled=true; }
-  else if(energy>=100){ pb.textContent='❄️ CONGELAR INIMIGOS!'; pb.className='ready'; pb.disabled=false; }
-  else{ pb.textContent='❄️ ENERGIA ('+energy+'%)'; pb.className=''; pb.disabled=true; }
-}
-function emptyCells(){ const r=[]; for(let i=0;i<N;i++) for(let j=0;j<N;j++) if(!grid[i][j]) r.push({r:i,c:j}); return r; }
-function spawn(team,val){ const e=emptyCells(); if(!e.length) return; const s=e[Math.floor(Math.random()*e.length)]; grid[s.r][s.c]={team,val,sc:0.1}; }
+  function tone(f, type, dur) {
+    if (muted || !actx) return;
+    try {
+      var o = actx.createOscillator(), g = actx.createGain();
+      o.type = type; o.frequency.value = f;
+      g.gain.setValueAtTime(0.07, actx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + dur);
+      o.connect(g); g.connect(actx.destination);
+      o.start(); o.stop(actx.currentTime + dur);
+    } catch (e) {}
+  }
 
-function startGame(){
-  try{ if(!actx) actx=new(window.AudioContext||window.webkitAudioContext)(); if(actx.state==='suspended') actx.resume(); }catch(e){}
-  if(timerId) clearInterval(timerId);
-  document.getElementById('timer-box').style.display = mode==='blitz'?'flex':'none';
-  timeLeft=60; document.getElementById('timer').textContent=timeLeft;
-  if(mode==='blitz'){ timerId=setInterval(()=>{ if(over)return; timeLeft--; document.getElementById('timer').textContent=timeLeft; if(timeLeft<=0){clearInterval(timerId);endGame('TEMPO ESGOTADO!','Fim dos 60s.');} },1000); }
-  grid = Array.from({length:N},()=>Array(N).fill(null));
-  parts=[]; texts=[]; score=0; combo=1; energy=0; freeze=0; turns=0; over=false;
-  document.getElementById('overlay').style.display='none';
-  resize(); spawn('player',2); spawn('player',2); spawn('enemy',2);
-  if(mode==='survival') spawn('enemy',4);
-  ui(); tone(520,'triangle',0.15);
-}
-function usePower(){
+  function setMode(m, btnId) {
+    mode = m;
+    document.querySelectorAll('.mode-btn').forEach(function(b) { b.classList.remove('active'); });
+    document.getElementById(btnId).classList.add('active');
+    document.getElementById('best').textContent = bests[mode] || 0;
+    document.getElementById('mode-label').textContent = 'MODO: ' + (m === 'classic' ? 'CLÁSSICO' : m === 'blitz' ? '60 SEG' : 'EXTREMO');
+  }
+
+  document.getElementById('m-classic').onclick = function() { setMode('classic', 'm-classic'); };
+  document.getElementById('m-blitz').onclick = function() { setMode('blitz', 'm-blitz'); };
+  document.getElementById('m-survival').onclick = function() { setMode('survival', 'm-survival'); };
+  document.getElementById('sound-btn').onclick = function() {
+    muted = !muted;
+    this.textContent = muted ? '🔇' : '🔊';
+  };
+
+  function resize() {
+    var w = canvas.parentElement.getBoundingClientRect().width || 320;
+    var dpr = window.devicePixelRatio || 1;
+    canvas.width = w * dpr; canvas.height = w * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cell = w / N;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function fx(c, r, col, txt) {
+    for (var i = 0; i < 10; i++) {
+      var a = Math.random() * 6.28, s = 1.5 + Math.random() * 3.5;
+      parts.push({x:(c+0.5)*cell, y:(r+0.5)*cell, vx:Math.cos(a)*s, vy:Math.sin(a)*s, l:1, col:col});
+    }
+    if (txt) texts.push({x:(c+0.5)*cell, y:(r+0.4)*cell, txt:txt, col:col, l:1});
+  }
+
+  function ui() {
+    document.getElementById('score').textContent = score;
+    if (score > (bests[mode] || 0)) {
+      bests[mode] = score;
+      document.getElementById('best').textContent = score;
+      try { localStorage.setItem('cm_bests', JSON.stringify(bests)); } catch (e) {}
+    }
+    if (score >= 1000) unlock('pts1000', '1.000 Pontos!');
+    if (combo >= 5) unlock('combo5', 'Combo x5!');
+    var cb = document.getElementById('combo-badge');
+    cb.textContent = 'x' + combo;
+    cb.style.display = combo > 1 ? 'inline-block' : 'none';
+    var pb = document.getElementById('power-btn');
+    if (freeze > 0) { pb.textContent = '❄️ CONGELADO (' + freeze + ')'; pb.className = ''; pb.disabled = true; }
+    else if (energy >= 100) { pb.textContent = '❄️ CONGELAR INIMIGOS!'; pb.className = 'ready'; pb.disabled = false; }
+    else { pb.textContent = '❄️ ENERGIA (' + energy + '%)'; pb.className = ''; pb.disabled = true; }
+  }
+
+  function emptyCells() {
+    var r = [];
+    for (var i = 0; i < N; i++) for (var j = 0; j < N; j++) if (!grid[i][j]) r.push({r:i, c:j});
+    return r;
+  }
+
+  function spawn(team, val) {
+    var e = emptyCells();
+    if (!e.length) return;
+    var s = e[Math.floor(Math.random() * e.length)];
+    grid[s.r][s.c] = {team:team, val:val, sc:0.2};
+  }
+
+  function startGame() {
+    try {
