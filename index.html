@@ -3,81 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#05070c" />
-  <title>CHRONO-MERGE ARENA PRO</title>
+  <title>CHRONO-MERGE PRO</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
     body {
-      background: radial-gradient(circle at top, #171d38 0%, #05070c 85%);
-      color: #f8fafc;
-      font-family: system-ui, -apple-system, sans-serif;
+      background: #05070c; color: #f8fafc; font-family: system-ui, sans-serif;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       min-height: 100vh; overflow: hidden; touch-action: none; padding: 10px;
     }
     header, footer {
-      width: 100%; max-width: 440px; padding: 10px 14px; background: #0d121f;
-      display: flex; justify-content: space-between; align-items: center; border: 1px solid #222c4a;
+      width: 100%; max-width: 420px; padding: 10px 14px; background: #0e1320;
+      display: flex; justify-content: space-between; align-items: center; border: 1px solid #232d4b;
     }
-    header { border-bottom: none; border-radius: 16px 16px 0 0; }
-    footer { border-top: none; border-radius: 0 0 16px 16px; gap: 8px; }
-    .brand { display: flex; flex-direction: column; gap: 2px; }
-    .title-row { display: flex; align-items: center; gap: 6px; }
-    .title {
-      font-weight: 900; letter-spacing: 1px; font-size: 1rem;
-      background: linear-gradient(90deg, #00f5d4, #00bbf9, #9b5de5);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .sub-info { font-size: 0.7rem; color: #64748b; font-weight: 700; }
-    .combo {
-      background: linear-gradient(135deg, #fee440, #f15bb5); color: #05070c;
-      font-size: 0.7rem; font-weight: 900; padding: 2px 6px; border-radius: 6px;
-    }
-    .hidden { display: none !important; }
+    header { border-bottom: none; border-radius: 14px 14px 0 0; }
+    footer { border-top: none; border-radius: 0 0 14px 14px; gap: 8px; }
+    .title { font-weight: 900; font-size: 1rem; color: #00f5d4; }
+    .sub { font-size: 0.7rem; color: #94a3b8; font-weight: 700; }
+    .combo { background: #fee440; color: #000; font-size: 0.7rem; font-weight: 900; padding: 2px 6px; border-radius: 6px; margin-left: 6px; }
     .stats { display: flex; gap: 12px; font-size: 0.65rem; font-weight: 700; color: #94a3b8; }
     .stat-box { display: flex; flex-direction: column; align-items: flex-end; }
     .stat-box span { font-size: 1rem; color: #fff; font-weight: 900; }
-    #timer-box.urgent span { color: #ff1e56; }
     #game-container {
-      position: relative; width: 100%; max-width: 440px; aspect-ratio: 1 / 1;
-      background: #080c15; border-left: 1px solid #222c4a; border-right: 1px solid #222c4a;
+      position: relative; width: 100%; max-width: 420px; aspect-ratio: 1 / 1;
+      background: #090d16; border-left: 1px solid #232d4b; border-right: 1px solid #232d4b;
     }
     canvas { display: block; width: 100%; height: 100%; }
     button { border: none; border-radius: 10px; font-weight: 800; cursor: pointer; }
-    button:active:not(:disabled) { transform: scale(0.94); }
-    #power-btn { flex: 1; padding: 11px; font-size: 0.82rem; background: #161e33; color: #64748b; }
-    #power-btn.ready { background: linear-gradient(135deg, #00bbf9, #9b5de5); color: #fff; }
-    .icon-btn { padding: 11px 13px; font-size: 0.95rem; background: #161e33; color: #cbd5e1; }
+    #power-btn { flex: 1; padding: 12px; font-size: 0.82rem; background: #182036; color: #64748b; }
+    #power-btn.ready { background: #9b5de5; color: #fff; }
+    .icon-btn { padding: 12px 14px; font-size: 0.95rem; background: #182036; color: #fff; }
     #overlay {
       position: absolute; inset: 0; background: rgba(5, 7, 12, 0.95);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-align: center; padding: 18px; z-index: 10;
+      text-align: center; padding: 18px; z-index: 20;
     }
-    .badge {
-      background: rgba(0, 245, 212, 0.12); color: #00f5d4; border: 1px solid rgba(0, 245, 212, 0.4);
-      font-size: 0.68rem; font-weight: 900; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px;
-    }
-    #overlay h2 {
-      font-size: 1.75rem; font-weight: 900; margin-bottom: 8px;
-      background: linear-gradient(90deg, #00f5d4, #fee440);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    #overlay p { margin-bottom: 14px; line-height: 1.45; color: #cbd5e1; font-size: 0.84rem; }
+    #overlay h2 { font-size: 1.7rem; font-weight: 900; margin-bottom: 8px; color: #00f5d4; }
+    #overlay p { margin-bottom: 14px; line-height: 1.4; color: #cbd5e1; font-size: 0.85rem; }
     .modes { display: flex; gap: 6px; width: 100%; margin-bottom: 14px; }
-    .mode-btn {
-      flex: 1; padding: 9px 4px; font-size: 0.74rem;
-      background: #141b2e; color: #94a3b8; border: 1px solid #232d4b;
-    }
-    .mode-btn.active { background: rgba(0, 187, 249, 0.18); color: #00f5d4; border-color: #00f5d4; }
-    #start-btn {
-      width: 100%; background: linear-gradient(135deg, #00f5d4, #00bbf9); color: #040810;
-      padding: 14px; font-size: 1rem; box-shadow: 0 0 22px rgba(0, 245, 212, 0.4);
-    }
-    .trophies { margin-top: 12px; font-size: 0.72rem; color: #94a3b8; }
+    .mode-btn { flex: 1; padding: 10px 4px; font-size: 0.75rem; background: #141b2e; color: #94a3b8; border: 1px solid #232d4b; }
+    .mode-btn.active { background: #00bbf9; color: #040810; border-color: #00f5d4; }
+    #start-btn { width: 100%; background: #00f5d4; color: #040810; padding: 14px; font-size: 1rem; }
+    .trophies { margin-top: 10px; font-size: 0.75rem; color: #fee440; }
     #toast {
-      position: fixed; top: 14px; left: 50%; transform: translateX(-50%) translateY(-80px);
-      background: linear-gradient(135deg, #fee440, #ff9e00); color: #05070c;
-      padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 900;
-      transition: transform 0.35s; z-index: 50; white-space: nowrap;
+      position: fixed; top: 14px; left: 50%; transform: translateX(-50%) translateY(-100px);
+      background: #fee440; color: #000; padding: 8px 16px; border-radius: 20px;
+      font-size: 0.8rem; font-weight: 900; transition: transform 0.3s; z-index: 50;
     }
     #toast.show { transform: translateX(-50%) translateY(0); }
   </style>
@@ -85,15 +55,12 @@
 <body>
   <div id="toast">🏆 CONQUISTA!</div>
   <header>
-    <div class="brand">
-      <div class="title-row">
-        <span class="title">CHRONO-MERGE</span>
-        <span id="combo-badge" class="combo hidden">x2</span>
-      </div>
-      <span id="mode-label" class="sub-info">MODO: CLÁSSICO</span>
+    <div>
+      <div><span class="title">CHRONO-MERGE</span><span id="combo-badge" class="combo" style="display:none">x2</span></div>
+      <div id="mode-label" class="sub">MODO: CLÁSSICO</div>
     </div>
     <div class="stats">
-      <div id="timer-box" class="stat-box hidden">TEMPO <span id="timer">60</span></div>
+      <div id="timer-box" class="stat-box" style="display:none">TEMPO <span id="timer">60</span></div>
       <div class="stat-box">PONTOS <span id="score">0</span></div>
       <div class="stat-box">RECORDE <span id="best">0</span></div>
     </div>
@@ -101,29 +68,26 @@
   <div id="game-container">
     <canvas id="canvas"></canvas>
     <div id="overlay">
-      <div class="badge">EDIÇÃO PRO 2.0</div>
       <h2 id="overlay-title">CHRONO-MERGE</h2>
       <p id="overlay-desc">
         <strong>O tempo só avança quando te moves.</strong><br>
-        🔹 Junta iguais (2+2=4) • 🔴 Caça iguais ou menores.<br>
-        ❄️ Carrega energia para congelar a arena!
+        🔹 Junta iguais (2+2=4) • 🔴 Caça iguais ou menores.
       </p>
       <div class="modes">
-        <button class="mode-btn active" data-mode="classic">⚔️ Clássico</button>
-        <button class="mode-btn" data-mode="blitz">⏱️ 60 Seg</button>
-        <button class="mode-btn" data-mode="survival">💀 Extremo</button>
+        <button type="button" class="mode-btn active" data-mode="classic">⚔️ Clássico</button>
+        <button type="button" class="mode-btn" data-mode="blitz">⏱️ 60 Seg</button>
+        <button type="button" class="mode-btn" data-mode="survival">💀 Extremo</button>
       </div>
-      <button id="start-btn">INICIAR PARTIDA</button>
+      <button type="button" id="start-btn">INICIAR PARTIDA</button>
       <div id="trophy-count" class="trophies">🏆 Conquistas: 0 / 4</div>
     </div>
   </div>
   <footer>
-    <button id="power-btn" disabled>❄️ ENERGIA (0%)</button>
-    <button id="sound-btn" class="icon-btn">🔊</button>
-    <button id="restart-btn" class="icon-btn">↻</button>
+    <button type="button" id="power-btn" disabled>❄️ ENERGIA (0%)</button>
+    <button type="button" id="sound-btn" class="icon-btn">🔊</button>
+    <button type="button" id="restart-btn" class="icon-btn">↻</button>
   </footer>
   <script>
-  (() => {
     const canvas = document.getElementById('canvas'), ctx = canvas.getContext('2d');
     const scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
     const timerBox = document.getElementById('timer-box'), timerEl = document.getElementById('timer');
@@ -141,45 +105,49 @@
       128: ['#fee440', '#040810'], 256: ['#ffffff', '#040810']
     };
 
-    let mode = 'classic', cell = 0, grid = [], parts = [], texts = [], waves = [];
+    let mode = 'classic', cell = 0, grid = [], parts = [], texts = [];
     let score = 0, combo = 1, energy = 0, freeze = 0, shake = 0, turns = 0;
-    let timeLeft = 60, timerId = null, bgmId = null, beatStep = 0, over = false, muted = false, actx = null;
-    let bests = JSON.parse(localStorage.getItem('cm_pro_bests') || '{"classic":0,"blitz":0,"survival":0}');
-    let ach = JSON.parse(localStorage.getItem('cm_pro_ach') || '{}');
+    let timeLeft = 60, timerId = null, over = false, muted = false, actx = null;
+    let bests = JSON.parse(localStorage.getItem('cm_bests') || '{"classic":0,"blitz":0,"survival":0}');
+    let ach = JSON.parse(localStorage.getItem('cm_ach') || '{}');
 
     function updateTrophies() { trophyCount.textContent = `🏆 Conquistas: ${Object.keys(ach).length} / 4`; }
     updateTrophies(); bestEl.textContent = bests[mode] || 0;
 
     function unlock(id, label) {
       if (ach[id]) return;
-      ach[id] = true; localStorage.setItem('cm_pro_ach', JSON.stringify(ach)); updateTrophies();
-      toast.textContent = `🏆 ${label}`; toast.classList.add('show'); tone(880, 'triangle', 0.25);
+      ach[id] = true; localStorage.setItem('cm_ach', JSON.stringify(ach)); updateTrophies();
+      toast.textContent = `🏆 ${label}`; toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 2500);
     }
 
-    function tone(f, t, d, v = 0.07) {
+    function tone(f, t, d) {
       if (muted || !actx) return;
-      const o = actx.createOscillator(), g = actx.createGain();
-      o.type = t; o.frequency.value = f; g.gain.setValueAtTime(v, actx.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + d);
-      o.connect(g); g.connect(actx.destination); o.start(); o.stop(actx.currentTime + d);
+      try {
+        const o = actx.createOscillator(), g = actx.createGain();
+        o.type = t; o.frequency.value = f; g.gain.setValueAtTime(0.07, actx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + d);
+        o.connect(g); g.connect(actx.destination); o.start(); o.stop(actx.currentTime + d);
+      } catch (e) {}
     }
 
-    soundBtn.addEventListener('click', () => { muted = !muted; soundBtn.textContent = muted ? '🔇' : '🔊'; });
-    modeBtns.forEach(btn => btn.addEventListener('click', () => {
-      modeBtns.forEach(b => b.classList.remove('active')); btn.classList.add('active');
-      mode = btn.dataset.mode; bestEl.textContent = bests[mode] || 0;
-      modeLabel.textContent = `MODO: ${mode === 'classic' ? 'CLÁSSICO' : mode === 'blitz' ? '60 SEG' : 'EXTREMO'}`;
-    }));
+    soundBtn.onclick = () => { muted = !muted; soundBtn.textContent = muted ? '🔇' : '🔊'; };
+    modeBtns.forEach(btn => {
+      btn.onclick = () => {
+        modeBtns.forEach(b => b.classList.remove('active')); btn.classList.add('active');
+        mode = btn.dataset.mode; bestEl.textContent = bests[mode] || 0;
+        modeLabel.textContent = `MODO: ${mode === 'classic' ? 'CLÁSSICO' : mode === 'blitz' ? '60 SEG' : 'EXTREMO'}`;
+      };
+    });
 
     function resize() {
-      const w = canvas.parentElement.getBoundingClientRect().width, dpr = window.devicePixelRatio || 1;
+      const w = canvas.parentElement.getBoundingClientRect().width || 340;
+      const dpr = window.devicePixelRatio || 1;
       canvas.width = w * dpr; canvas.height = w * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); cell = w / N;
     }
     window.addEventListener('resize', resize); resize();
 
     function fx(c, r, col, txt) {
-      waves.push({ x: (c + 0.5) * cell, y: (r + 0.5) * cell, r: cell * 0.2, max: cell * 1.1, col, l: 1 });
       for (let i = 0; i < 12; i++) {
         const a = Math.random() * Math.PI * 2, s = 1.5 + Math.random() * 3.5;
         parts.push({ x: (c + 0.5) * cell, y: (r + 0.5) * cell, vx: Math.cos(a) * s, vy: Math.sin(a) * s, l: 1, col });
@@ -189,12 +157,12 @@
 
     function ui() {
       scoreEl.textContent = score;
-      if (score > (bests[mode] || 0)) { bests[mode] = score; bestEl.textContent = score; localStorage.setItem('cm_pro_bests', JSON.stringify(bests)); }
-      if (score >= 1000) unlock('pts1000', 'Mestre: 1.000 Pontos!');
-      if (combo >= 5) unlock('combo5', 'Imparável: Combo x5!');
-      comboBadge.textContent = `COMBO x${combo}`; comboBadge.classList.toggle('hidden', combo <= 1);
+      if (score > (bests[mode] || 0)) { bests[mode] = score; bestEl.textContent = score; localStorage.setItem('cm_bests', JSON.stringify(bests)); }
+      if (score >= 1000) unlock('pts1000', '1.000 Pontos!');
+      if (combo >= 5) unlock('combo5', 'Combo x5!');
+      comboBadge.textContent = `x${combo}`; comboBadge.style.display = combo > 1 ? 'inline-block' : 'none';
       if (freeze > 0) { powerBtn.textContent = `❄️ CONGELADO (${freeze})`; powerBtn.className = ''; powerBtn.disabled = true; }
-      else if (energy >= 100) { powerBtn.textContent = '❄️ ATIVAR CONGELAMENTO!'; powerBtn.className = 'ready'; powerBtn.disabled = false; }
+      else if (energy >= 100) { powerBtn.textContent = '❄️ CONGELAR INIMIGOS!'; powerBtn.className = 'ready'; powerBtn.disabled = false; }
       else { powerBtn.textContent = `❄️ ENERGIA (${energy}%)`; powerBtn.className = ''; powerBtn.disabled = true; }
     }
 
@@ -211,39 +179,34 @@
     }
 
     function start() {
-      if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
-      if (actx.state === 'suspended') actx.resume();
-      if (bgmId) clearInterval(bgmId);
-      const notes = [110, 110, 146.8, 130.8, 110, 110, 164.8, 146.8];
-      bgmId = setInterval(() => { if (!over && !muted && overlay.classList.contains('hidden')) { tone(notes[beatStep++ % 8], 'sine', 0.14, 0.02); } }, 300);
-
+      try { if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === 'suspended') actx.resume(); } catch (e) {}
       if (timerId) clearInterval(timerId);
-      timerBox.classList.toggle('hidden', mode !== 'blitz'); timerBox.classList.remove('urgent');
+      timerBox.style.display = mode === 'blitz' ? 'flex' : 'none';
       timeLeft = 60; timerEl.textContent = timeLeft;
       if (mode === 'blitz') {
         timerId = setInterval(() => {
           if (over) return; timeLeft--; timerEl.textContent = timeLeft;
-          if (timeLeft <= 10) timerBox.classList.add('urgent');
-          if (timeLeft <= 0) { clearInterval(timerId); end('TEMPO ESGOTADO!', 'Excelente corrida contra o relógio.'); }
+          if (timeLeft <= 0) { clearInterval(timerId); end('TEMPO ESGOTADO!', 'Fim dos 60 segundos.'); }
         }, 1000);
       }
       grid = Array.from({ length: N }, () => Array(N).fill(null));
-      parts = []; texts = []; waves = []; score = 0; combo = 1; energy = 0; freeze = 0; turns = 0; over = false;
-      overlay.classList.add('hidden');
+      parts = []; texts = []; score = 0; combo = 1; energy = 0; freeze = 0; turns = 0; over = false;
+      overlay.style.display = 'none';
+      resize();
       spawn('player', 2); spawn('player', 2); spawn('enemy', 2);
       if (mode === 'survival') spawn('enemy', 4);
       ui(); tone(520, 'triangle', 0.15);
     }
 
-    powerBtn.addEventListener('click', () => {
+    powerBtn.onclick = () => {
       if (energy >= 100 && !freeze && !over) {
-        energy = 0; freeze = 2; shake = 8; if (navigator.vibrate) navigator.vibrate(40);
-        unlock('freeze1', 'Senhor do Tempo!'); tone(720, 'sine', 0.3); fx(2.5, 2.5, '#4cc9f0', 'TEMPO CONGELADO!'); ui();
+        energy = 0; freeze = 2; shake = 8; unlock('freeze1', 'Senhor do Tempo!');
+        tone(720, 'sine', 0.3); fx(2.5, 2.5, '#4cc9f0', 'CONGELADO!'); ui();
       }
-    });
+    };
 
     function move(dr, dc) {
-      if (over || !overlay.classList.contains('hidden')) return;
+      if (over || overlay.style.display !== 'none') return;
       let moved = false, gain = 0;
       const merged = Array.from({ length: N }, () => Array(N).fill(false));
       const rows = [...Array(N).keys()], cols = [...Array(N).keys()];
@@ -267,7 +230,7 @@
           else if (d.team === 'player') {
             const nv = u.val * 2, pts = nv * combo;
             grid[nr][nc] = { team: 'player', val: nv, sc: 1.35 }; merged[nr][nc] = true; gain += pts; energy = Math.min(100, energy + 15);
-            if (nv >= 32) unlock('merge32', 'Alquimista: Peça 32!');
+            if (nv >= 32) unlock('merge32', 'Alquimista 32!');
             fx(nc, nr, (COLORS[nv] || ['#fee440']), `+${pts}`); tone(320 + Math.log2(nv) * 60, 'triangle', 0.12);
           } else {
             const nv = u.val + (d.val === u.val ? u.val : 0), pts = d.val * 3 * combo;
@@ -300,3 +263,14 @@
           if (bestM) {
             grid[e.r][e.c] = null;
             if (bestM.a === 'm') grid[bestM.tr][bestM.tc] = e.u;
+            else if (bestM.a === 'f') { grid[bestM.tr][bestM.tc] = { team: 'enemy', val: e.u.val * 2, sc: 1.25 }; fx(bestM.tc, bestM.tr, '#ff1e56'); }
+            else { grid[bestM.tr][bestM.tc] = e.u; shake = 10; fx(bestM.tc, bestM.tr, '#fee440', 'ABSORVIDO!'); tone(130, 'sawtooth', 0.25); }
+          }
+        }
+      }
+      spawn('player', Math.random() < 0.85 ? 2 : 4);
+      if (turns % (mode === 'survival' ? 1 : 2) === 0 && !freeze) {
+        const maxP = Math.max(2, ...grid.flat().filter(u => u && u.team === 'player').map(u => u.val));
+        spawn('enemy', maxP >= 16 && Math.random() < (mode === 'survival' ? 0.55 : 0.35) ? 4 : 2);
+      }
+      ui();
